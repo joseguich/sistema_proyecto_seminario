@@ -1,0 +1,12 @@
+extends ../layouts/index
+
+block contenido
+  .pt-10
+    h1.text-center.font-bold.text-4xl.my-10.text-gray-500 Micr🍎
+      span.text-red-700 Tech
+    h2.text-2xl.font-bold.mb-6.text-center=pagina
+
+    .max-w-4xl.mx-auto.font-bold.text-lg.text-white.mt-10
+      p(class= error ? " bg-red-600" : "bg-green-600").py-2.rounded-lg.text-center=mensaje
+    if !error
+      a(href="/auth/login" class="block mx-auto max-w-md text-white font-bold text-lg text-center rounded-lg my-5 px-10 py-2 bg-gray-600 hover:bg-gray-700 ") Iniciar Sesión

@@ -1,0 +1,36 @@
+{
+  "name": "microtech",
+  "version": "1.0.0",
+  "description": "Realizar un software para facturación de equipos mobiles",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "server": "nodemon ./index.js",
+    "css": "npx tailwindcss -i public/css/tailwind.css -o public/css/app.css --watch"
+  },
+  "keywords": [
+    "MVC",
+    "SEQUELIZE",
+    "MYSQL",
+    "PUG",
+    "EXPRESS",
+    "JWT"
+  ],
+  "author": "José Elpidio Guichardo Mieses",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-validator": "^7.2.0",
+    "mysql2": "^3.11.0",
+    "nodemailer": "^6.9.14",
+    "pug": "^3.0.3",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "tailwindcss": "^3.4.10"
+  }
+}

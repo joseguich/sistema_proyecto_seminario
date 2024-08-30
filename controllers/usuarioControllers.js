@@ -15,8 +15,6 @@ const registrar = (req, res) => {
   res.render("auth/registrar", {
     pagina: "Crear Cuenta",
   });
-
-  console.log(generarToken());
 };
 
 const registrarCuenta = async (req, res) => {
@@ -84,6 +82,7 @@ const confirmarCuenta = async (req, res) => {
 
   //Validar si existe
   const usuario = await Usuario.findOne({ where: { token } });
+  console.log(usuario);
   if (!usuario) {
     return res.render("auth/confirmar-cuenta", {
       pagina: "Confirmación de Cuenta",

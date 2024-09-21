@@ -1,2 +1,0 @@
-# MicroTech
-Facturacón para MicroTech

@@ -1,46 +1,47 @@
 extends ../layouts/index
-block styles 
-   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css")
+
 block contenido
   .pt-10
-    h1.text-center.font-bold.text-4xl.my-10.text-gray-500 Micr🍎
-      span.text-red-700 Tech
+    h1.text-center.font-bold.text-4xl.my-10.text-gray-500 Ges
+      span.text-red-700 Tick
     h2.text-2xl.font-bold.mb-6.text-center=pagina
       if errores
-        div(id="errores" class=" max-w-md mx-auto mt-10 ")
+        div(id="errores" class=" max-w-md mx-auto mt-5 ")
           each error in errores
             p(class="bg-red-600 rounded-lg text-white text-sm text-center py-2 my-2 ")=error.msg
 
-    .mx-auto.max-w-md.mt-8
+    .mx-auto.max-w-md
       .bg-white.p-6.rounded.shadow-md
-        form(class="space-y-6" action="/auth/registrar" method="POST")
-          .mb-4
+        form(class="space-y-5" action="/auth/registrar" method="POST")
+          input(type="hidden" name="_csrf" value=csrfToken)
+          div
             label(for='nombre' class="block text-lg font-semibold text-gray-700") Nombre
-            input(type="text" name="nombre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Ingrese su nombre")
+            input(type="text" name="nombre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" value=usuario ? usuario.nombre : "" placeholder="Ingrese su nombre")
 
-          .mb-4
+          div
             label(for='email' class="block text-lg font-semibold text-gray-700") Email
-            input(type="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Ingrese su email")
+            input(type="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" value=usuario ? usuario.email : "" placeholder="Ingrese su email")
 
-          .mb-4
+          div
             label(for='password' class="block text-lg font-semibold text-gray-700") Contraseña
             input(type="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Ingrese su contraseña")
 
-          .mb-4
+          div
             label(for='confirm_password' class="block text-lg font-semibold text-gray-700") Confirmar Contraseña
             input(type="password" name="confirm_password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Confirme su contraseña")
 
-          .mb-4
-              label(for='rol' class="block text-lg font-semibold text-gray-700") Rol de Usuario
-              select(name="rol" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none")
-                option(value="tecnico") Técnico
-                option(value="cajero") Cajero
-                option(value="admin") Administrador
+          div
+            label(for='rol' class="block text-lg font-semibold text-gray-700") Rol de Usuario
+            select(name="rol" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none")
+              option(value="") --Seleccione tipo de usuario--
+              option(value="tecnico" selected=usuario ? usuario.rol === "tecnico" : false) Técnico
+              option(value="cajero" selected=usuario ? usuario.rol === "cajero" : false) Cajero
+              option(value="admin" selected=usuario ? usuario.rol === "admin" : false) Administrador
 
-          .mb-4.flex.justify-between.itmes-center
-              a(href="/auth/login" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Ya tienes cuenta? Iniciar Sesión
-              a(href="/auth/olvidar-password" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Olvisdate tu contraseña?
+          div.flex.justify-between.itmes-center
+            a(href="/auth/login" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Ya tienes cuenta? Iniciar Sesión
+            a(href="/auth/olvidar-password" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Olvisdate tu contraseña?
 
           button(type="submit" class="bg-gray-700 text-lg text-white rounded-md px-5 py-2 my-5 w-full hover:bg-gray-800") Registrar
 block scripts 
-    script(src="/js/setTimeout.js")
+  script(src="/js/setTimeout.js")

@@ -1,9 +1,9 @@
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import Usuario from "../model/Usuario.js";
-import { where } from "sequelize";
+import { Op, where } from "sequelize";
 import { generarToken } from "../helper/token.js";
-import { emailRegistrar } from "../helper/mailtrap.js";
+import { emailRecuperacion, emailRegistrar } from "../helper/mailtrap.js";
 
 const login = (req, res) => {
   res.render("auth/login", {
@@ -14,6 +14,7 @@ const login = (req, res) => {
 const registrar = (req, res) => {
   res.render("auth/registrar", {
     pagina: "Crear Cuenta",
+    csrfToken: req.csrfToken(),
   });
 };
 
@@ -33,12 +34,19 @@ const registrarCuenta = async (req, res) => {
     .custom((value, { req }) => value === req.body.password)
     .withMessage("Contraseña no son iguales")
     .run(req);
+  await check("rol").notEmpty().withMessage("Rol es obligatorio").run(req);
 
   const resultado = validationResult(req);
   if (!resultado.isEmpty()) {
     return res.render("auth/registrar", {
       pagina: "Crear Cuenta",
       errores: resultado.array(),
+      csrfToken: req.csrfToken(),
+      usuario: {
+        nombre,
+        email,
+        rol,
+      },
     });
   }
 
@@ -49,6 +57,10 @@ const registrarCuenta = async (req, res) => {
     return res.render("auth/registrar", {
       pagina: "Crear Cuenta",
       errores: [{ msg: "Usuario ya existe" }],
+      usuario: {
+        nombre,
+        email,
+      },
     });
   }
 
@@ -105,7 +117,71 @@ const confirmarCuenta = async (req, res) => {
 const olvidarPassword = (req, res) => {
   res.render("auth/olvidar-password", {
     pagina: "Recuperar Contraseña",
+    csrfToken: req.csrfToken(),
   });
 };
 
-export { login, registrar, registrarCuenta, confirmarCuenta, olvidarPassword };
+const retablecerPassword = async (req, res) => {
+  console.log(req.body);
+  const { identificador } = req.body;
+
+  await check("identificador")
+    .notEmpty()
+    .withMessage("Nombre o Email son obligatorio")
+    .run(req);
+
+  const resultado = validationResult(req);
+
+  if (!resultado.isEmpty()) {
+    return res.render("auth/olvidar-password", {
+      pagina: "Recuperar Contraseña",
+      errores: resultado.array(),
+      csrfToken: req.csrfToken(),
+      usuario: {
+        identificador,
+      },
+    });
+  }
+
+  //Validar si el usurio o email existen.
+  const usuario = await Usuario.findOne({
+    where: { [Op.or]: [{ email: identificador }, { nombre: identificador }] },
+  });
+
+  if (!usuario) {
+    return res.render("auth/olvidar-password", {
+      pagina: "Recuperar Contraseña",
+      errores: [{ msg: "Usuario o Email no existe" }],
+      csrfToken: req.csrfToken(),
+      usuario: {
+        identificador,
+      },
+    });
+  }
+
+  //Generar el nuevo token
+  usuario.token = generarToken();
+  usuario.save();
+
+  //Enviar email
+  emailRecuperacion({
+    nombre: usuario.nombre,
+    email: usuario.email,
+    token: usuario.token,
+  });
+
+  res.render("template/mensaje", {
+    pagina: "Recuperar Contraseña",
+    mensaje:
+      "Se envio un correo con las instrucciones de retablecer tu contraseña",
+  });
+};
+
+export {
+  login,
+  registrar,
+  registrarCuenta,
+  confirmarCuenta,
+  olvidarPassword,
+  retablecerPassword,
+};

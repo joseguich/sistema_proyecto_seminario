@@ -1,0 +1,39 @@
+extends ../layouts/index
+
+block contenido
+  div(class="container mx-auto p-8")
+    h1.text-3xl.font-bold.text-center.text-gray-800.shadow Crear Nuevo Ticket - Aplicaciones
+    form(action="/ticket/create" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto space-y-2")
+      // Seleccionar la aplicación
+      div
+        label(for="application" class="block text-gray-700 text-sm font-bold mb-2") Seleccionar Aplicación
+        select(id="application" name="application" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline")
+          option(value="app1") Sistema de Gestión Académica
+          option(value="app2") CRM de Ventas
+          option(value="app3") Portal de Empleados
+          option(value="app4") Aplicación de Inventarios
+          option(value="app5") Plataforma de E-commerce
+
+      // Detalles del ticket
+      div
+        label(for="email" class="block text-gray-700 text-sm font-bold mb-2") Correo Electronico
+        input(id="email" name="email" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Correo Electronico")
+      div
+        label(for="asunto" class="block text-gray-700 text-sm font-bold mb-2") Asunto
+        input(id="asunto" name="asunto" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Asunto Ejemplo: Apliaciones no esta en función")
+      div
+        label(for="ip" class="block text-gray-700 text-sm font-bold mb-2") IP Computadora
+        input(id="ip" name="ip" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="IP") 
+
+      div
+        label(for="details_ticket" class="block text-gray-700 text-sm font-bold mb-2") Detalles del Ticket
+        textarea(id="details_ticket" name="details_ticket" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Describe el problema..." rows="5")
+
+      // Subir imagen
+      div
+        label(for="image_ticket" class="block text-gray-700 text-sm font-bold mb-2") Subir Imagen (opcional)
+        input(type="file" id="image_ticket" name="image_ticket" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline")
+
+      // Botón de enviar
+      div.mt-6
+        button(type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded") Enviar Ticket

@@ -3,13 +3,18 @@ html(lang="en")
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title MicroTech | #{pagina}
+    title GesTick | #{pagina}
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     link(rel="stylesheet" href="/css/app.css")
     block styles 
+      link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css")
 
   body.min-h-screen.bg-gray-50
+    if barra
+      include header
+
     main(class="mx-auto container mt-10 px-2")
     block contenido
 
-  
+
     block scripts

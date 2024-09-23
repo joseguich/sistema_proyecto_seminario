@@ -161,7 +161,7 @@ const retablecerPassword = async (req, res) => {
 
   //Generar el nuevo token
   usuario.token = generarToken();
-  usuario.save();
+  await usuario.save();
 
   //Enviar email
   emailRecuperacion({
@@ -177,6 +177,67 @@ const retablecerPassword = async (req, res) => {
   });
 };
 
+const recuperarPassword = async (req, res) => {
+  const { token } = req.params;
+
+  const usuario = await Usuario.findOne({ where: { token } });
+  if (!usuario) {
+    return res.render("auth/confirmar-cuenta", {
+      pagina: "Error de Recuperación de Contraseña",
+      mensaje: "Hubo un error al recuperar la contraseña, token no valido",
+      error: true,
+    });
+  }
+
+  res.render("auth/nuevo-password", {
+    pagina: "Nueva contraseña",
+    csrfToken: req.csrfToken(),
+  });
+};
+
+const nuevaPassword = async (req, res) => {
+  const { password } = req.body;
+  const { token } = req.params;
+
+  await check("password")
+    .notEmpty()
+    .withMessage("Contraseña no puede estar vacia")
+    .isLength({ min: 8 })
+    .withMessage("Contraseña no puede ser menor a 8 caracteres")
+    .run(req);
+
+  await check("confirmar_password")
+    .custom((value, { req }) => value === req.body.password)
+    .withMessage("Contraseña no coincide")
+    .run(req);
+
+  const resultado = validationResult(req);
+  if (!resultado.isEmpty()) {
+    return res.render("auth/nuevo-password", {
+      pagina: "Nueva contraseña",
+      errores: resultado.array(),
+      csrfToken: req.csrfToken(),
+    });
+  }
+
+  //Confirmar que es el usuario actual
+  const usuario = await Usuario.findOne({ where: { token } });
+
+  //Hash nuevo password
+  const salt = await bcrypt.genSalt(10);
+  usuario.password = await bcrypt.hash(password, salt);
+
+  usuario.token = null;
+
+  await usuario.save();
+
+  res.render("auth/confirmar-cuenta", {
+    pagina: "Retablecimiento de Contraseña",
+    mensaje: "Tu contraseña ha sido retablecida correctamente",
+    error: false,
+  });
+};
+
 export {
   login,
   registrar,
@@ -184,4 +245,6 @@ export {
   confirmarCuenta,
   olvidarPassword,
   retablecerPassword,
+  recuperarPassword,
+  nuevaPassword,
 };

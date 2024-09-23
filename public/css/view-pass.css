@@ -1,0 +1,12 @@
+.input-container {
+   position: relative;
+}
+
+.input-container .icon-eye {
+   position: absolute;
+   right: 0.20rem;
+   top: 60%;
+   transform: translate(-50%);
+   cursor: pointer;
+   opacity: 0.3;
+}

@@ -1,11 +1,11 @@
 import nodemailer from "nodemailer";
 
 const transport = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
   auth: {
-    user: "b71e6aab0e5400",
-    pass: "3b3904d11f00e1",
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
 });
 
@@ -19,7 +19,10 @@ const emailRegistrar = async (datos) => {
     html: `
       <p>Hola ${nombre}, Comprueba tu cuenta en GesTick</p>
       <p>Tu cuenta ya esta lista solo debe confimar en el siguiente enlace</p>
-      <a href="http:/localhost:3000/auth/confirmar-cuenta/${token}">Confirmar Cuenta</a>
+      <a href="${process.env.URL_BACKEND}${
+      process.env.PORT ?? 8080
+    }/auth/confirmar-cuenta/${token}">Confirmar Cuenta</a>
+     <p>Si no fue usted ignore este mensaje</p>
     `,
   });
 };
@@ -33,7 +36,10 @@ const emailRecuperacion = async (datos) => {
     html: `
       <p>Hola ${nombre}, Comprueba tu cuenta en GesTick</p>
       <p>Se olvido tu contraseña, solo debe confirmar en el siguiente enlace</p>
-      <a href="">Cambiar Contraseña</a>
+      <a href="${process.env.URL_BACKEND}${
+      process.env.PORT ?? 8080
+    }/auth/olvidar-password/${token}">Cambiar Contraseña</a>
+    <p>Si no fue usted ignore este mensaje</p>
     `,
   });
 };

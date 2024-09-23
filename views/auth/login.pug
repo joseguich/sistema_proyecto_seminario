@@ -12,9 +12,10 @@ block contenido
         .mb-4
           label(for='email' class="block text-lg font-semibold text-gray-700") Email
           input(type="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-red-200" placeholder="Ingrese tu email")
-        .mb-4
+        .mb-4.input-container
           label(for='password' class="block text-lg font-semibold text-gray-700") Contraseña
-          input(type="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-red-200" placeholder="Ingrese tu contraseña")
+          input(type="password" name="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-red-200" placeholder="Ingrese tu contraseña")
+          span(class="icon-eye" id="view-pass") 👁️
 
         .mb-4.flex.justify-between.itmes-center
           a(href="/auth/registrar" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿No tienes cuenta? Crea una

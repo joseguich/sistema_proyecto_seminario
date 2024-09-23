@@ -6,9 +6,9 @@ html(lang="en")
     title GesTick | #{pagina}
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     link(rel="stylesheet" href="/css/app.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css")
+    link(rel="stylesheet" href="/css/view-pass.css")
     block styles 
-      link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css")
-
   body.min-h-screen.bg-gray-50
     if barra
       include header
@@ -18,3 +18,7 @@ html(lang="en")
 
 
     block scripts
+      script(src="/js/setTimeout.js")
+      script(src="/js/viewPass.js")
+      script(src="https://kit.fontawesome.com/0558074f37.js" crossorigin="anonymous")
+

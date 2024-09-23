@@ -9,7 +9,7 @@ import db from "./config/db.js";
 const app = express();
 
 //port
-const port = 3000;
+const port = process.env.PORT ?? 8080;
 
 //Archivo estatico
 app.use(express.static("public"));

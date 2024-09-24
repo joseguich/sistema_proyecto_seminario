@@ -161,7 +161,7 @@ const retablecerPassword = async (req, res) => {
 
   //Generar el nuevo token
   usuario.token = generarToken();
-  usuario.save();
+  await usuario.save();
 
   //Enviar email
   emailRecuperacion({
@@ -177,6 +177,19 @@ const retablecerPassword = async (req, res) => {
   });
 };
 
+const recuperarPassword = async (req, res) => {
+  const { token } = req.params;
+
+  const usuario = await Usuario.findOne({ where: { token } });
+  if (!usuario) {
+    return res.render("auth/confirmar-cuenta", {
+      pagina: "Error Retabalecer contraseña",
+      mensaje: "Token ya no es valido intente nuevamente",
+      error: true,
+    });
+  }
+};
+
 export {
   login,
   registrar,
@@ -184,4 +197,5 @@ export {
   confirmarCuenta,
   olvidarPassword,
   retablecerPassword,
+  recuperarPassword,
 };

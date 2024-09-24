@@ -19,22 +19,30 @@ const emailRegistrar = async (datos) => {
     html: `
       <p>Hola ${nombre}, Comprueba tu cuenta en GesTick</p>
       <p>Tu cuenta ya esta lista solo debe confimar en el siguiente enlace</p>
-      <a href="http:/localhost:3000/auth/confirmar-cuenta/${token}">Confirmar Cuenta</a>
+      <a href="http://localhost:3000/auth/confirmar-cuenta/${token}">Confirmar Cuenta</a>
     `,
   });
 };
 const emailRecuperacion = async (datos) => {
   const { nombre, email, token } = datos;
   await transport.sendMail({
-    from: "GesTick.com",
+    from: "BienesRaices.com <no-reply@bienesraices.com",
     to: email,
-    subject: "Retablecer tu Contraseña de GesTick",
-    text: "Retablecer tu Contraseña de GesTick",
+    subject: "Solicutaste Retablecer tu contraseña BienesRaices.com",
+    text: "Solicutaste Retablecer tu contraseña BienesRaices.com",
     html: `
-      <p>Hola ${nombre}, Comprueba tu cuenta en GesTick</p>
-      <p>Se olvido tu contraseña, solo debe confirmar en el siguiente enlace</p>
-      <a href="">Cambiar Contraseña</a>
-    `,
+          <div style="max-width: 448px; margin: 0 auto; backgronud-color: rgb(243 244 246); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); text-align: left;">
+            <h2>Restablecimiento de contraseña de BienesRaices</h2>
+            <p>Hola, ${nombre} nos enteramos de que perdiste tu contraseña de BienesRaices. ¡Lo sentimos!</p>
+
+            <p>Pero no te preocupes, puedes utilizar el siguiente botón para restablecer tu contraseña:</p>
+            <a href="${process.env.BACKEND_URL}:${
+      process.env.PORTSERVER ?? 4000
+    }/auth/olvidaste-password/${token}" style="background-color: rgb(67 56 202); display:block; padding:10px; text-decoration: none; border-radius: 5px; color:#fff; width:45%; margin:0 auto; text-align: center; " >Restablecer tu contraseña</a>
+
+            <p>Si no hiciste la solicitud de restablecer contraseña, puedes ignorar el mensaje</p>
+        </div>
+      `,
   });
 };
 

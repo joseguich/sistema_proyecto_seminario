@@ -6,6 +6,7 @@ import {
   confirmarCuenta,
   olvidarPassword,
   retablecerPassword,
+  recuperarPassword,
 } from "../controllers/usuarioControllers.js";
 
 const router = express();
@@ -17,5 +18,7 @@ router.get("/confirmar-cuenta/:token", confirmarCuenta);
 
 router.get("/olvidar-password", olvidarPassword);
 router.post("/olvidar-password", retablecerPassword);
+
+router.get("/olvidar-password/:token", recuperarPassword);
 
 export default router;

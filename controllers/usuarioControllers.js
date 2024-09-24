@@ -1,14 +1,94 @@
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import Usuario from "../model/Usuario.js";
 import { Op, where } from "sequelize";
-import { generarToken } from "../helper/token.js";
+import { generarJWT, generarToken } from "../helper/token.js";
 import { emailRecuperacion, emailRegistrar } from "../helper/mailtrap.js";
 
 const login = (req, res) => {
   res.render("auth/login", {
     pagina: "Iniciar Sesión",
+    csrfToken: req.csrfToken(),
   });
+};
+
+const authUser = async (req, res) => {
+  const { identificador, password } = req.body;
+  await check("identificador")
+    .notEmpty()
+    .withMessage("Campo Email es obligatorio")
+    .run(req);
+  await check("password")
+    .notEmpty()
+    .withMessage("Contraseña es obligatoria")
+    .isLength({ min: 8 })
+    .withMessage("Contraseña minima 8 caracteres")
+    .run(req);
+
+  const resultado = validationResult(req);
+  if (!resultado.isEmpty()) {
+    return res.render("auth/login", {
+      pagina: "Iniciar Sesión",
+      errores: resultado.array(),
+      csrfToken: req.csrfToken(),
+      usuario: {
+        identificador,
+      },
+    });
+  }
+
+  const usuario = await Usuario.findOne({
+    where: {
+      [Op.or]: [{ email: identificador }, { nombre_usuario: identificador }],
+    },
+  });
+  if (!usuario) {
+    return res.render("auth/login", {
+      pagina: "Iniciar Sesión",
+      errores: [{ msg: "Usuario no valido o Email no valido" }],
+      csrfToken: req.csrfToken(),
+      usuario: {
+        identificador,
+      },
+    });
+  }
+
+  if (!usuario.confirmacion) {
+    return res.render("auth/login", {
+      pagina: "Iniciar Sesión",
+      errores: [{ msg: "Usuario no esta confirmado o no existe" }],
+      csrfToken: req.csrfToken(),
+      usuario: {
+        identificador,
+      },
+    });
+  }
+  //Verificar si el passowrd son iguales
+  const verificarPassword = bcrypt.compareSync(password, usuario.password);
+
+  if (!verificarPassword) {
+    return res.render("auth/login", {
+      pagina: "Iniciar Sesión",
+      errores: [{ msg: "Contraseña incorrecta" }],
+      csrfToken: req.csrfToken(),
+      usuario: {
+        identificador,
+      },
+    });
+  }
+
+  const token = generarJWT({
+    id: usuario.id,
+    nombre: usuario.nombre,
+    rol: usuario.rol,
+  });
+
+  return res
+    .cookie("_token", token, {
+      httpOnly: true,
+    })
+    .redirect("/catalogo");
 };
 
 const registrar = (req, res) => {
@@ -19,18 +99,22 @@ const registrar = (req, res) => {
 };
 
 const registrarCuenta = async (req, res) => {
-  const { nombre, email, rol, password } = req.body;
+  const { nombre, nombre_usuario, email, rol, password } = req.body;
   //Validar
   await check("nombre")
     .notEmpty()
     .withMessage("Nombre es obligatorio")
+    .run(req);
+  await check("nombre_usuario")
+    .notEmpty()
+    .withMessage("Usuario es obligatorio")
     .run(req);
   await check("email").isEmail().withMessage("Email es obligatorio").run(req);
   await check("password")
     .isLength({ min: 8 })
     .withMessage("Contraseña minimo 8 caracteres")
     .run(req);
-  await check("confirm_password")
+  await check("confirmar_password")
     .custom((value, { req }) => value === req.body.password)
     .withMessage("Contraseña no son iguales")
     .run(req);
@@ -44,6 +128,7 @@ const registrarCuenta = async (req, res) => {
       csrfToken: req.csrfToken(),
       usuario: {
         nombre,
+        nombre_usuario,
         email,
         rol,
       },
@@ -52,13 +137,14 @@ const registrarCuenta = async (req, res) => {
 
   // Validar si el Email existe.
   const usuario = await Usuario.findOne({ where: { email } });
-
   if (usuario) {
     return res.render("auth/registrar", {
       pagina: "Crear Cuenta",
       errores: [{ msg: "Usuario ya existe" }],
+      csrfToken: req.csrfToken(),
       usuario: {
         nombre,
+        nombre_usuario,
         email,
       },
     });
@@ -70,6 +156,7 @@ const registrarCuenta = async (req, res) => {
 
   const usuarios = await Usuario.create({
     nombre,
+    nombre_usuario,
     email,
     password: bcrpassword,
     rol,
@@ -90,11 +177,8 @@ const registrarCuenta = async (req, res) => {
 
 const confirmarCuenta = async (req, res) => {
   const { token } = req.params;
-  console.log(token);
-
   //Validar si existe
   const usuario = await Usuario.findOne({ where: { token } });
-  console.log(usuario);
   if (!usuario) {
     return res.render("auth/confirmar-cuenta", {
       pagina: "Confirmación de Cuenta",
@@ -122,7 +206,6 @@ const olvidarPassword = (req, res) => {
 };
 
 const retablecerPassword = async (req, res) => {
-  console.log(req.body);
   const { identificador } = req.body;
 
   await check("identificador")
@@ -145,7 +228,9 @@ const retablecerPassword = async (req, res) => {
 
   //Validar si el usurio o email existen.
   const usuario = await Usuario.findOne({
-    where: { [Op.or]: [{ email: identificador }, { nombre: identificador }] },
+    where: {
+      [Op.or]: [{ email: identificador }, { nombre_usuario: identificador }],
+    },
   });
 
   if (!usuario) {
@@ -183,19 +268,69 @@ const recuperarPassword = async (req, res) => {
   const usuario = await Usuario.findOne({ where: { token } });
   if (!usuario) {
     return res.render("auth/confirmar-cuenta", {
-      pagina: "Error Retabalecer contraseña",
-      mensaje: "Token ya no es valido intente nuevamente",
+      pagina: "Error de Recuperación de Contraseña",
+      mensaje: "Hubo un error al recuperar la contraseña, token no valido",
       error: true,
     });
   }
+
+  res.render("auth/nuevo-password", {
+    pagina: "Nueva contraseña",
+    csrfToken: req.csrfToken(),
+  });
+};
+
+const nuevaPassword = async (req, res) => {
+  const { password } = req.body;
+  const { token } = req.params;
+
+  await check("password")
+    .notEmpty()
+    .withMessage("Contraseña no puede estar vacia")
+    .isLength({ min: 8 })
+    .withMessage("Contraseña no puede ser menor a 8 caracteres")
+    .run(req);
+
+  await check("confirmar_password")
+    .custom((value, { req }) => value === req.body.password)
+    .withMessage("Contraseña no coincide")
+    .run(req);
+
+  const resultado = validationResult(req);
+  if (!resultado.isEmpty()) {
+    return res.render("auth/nuevo-password", {
+      pagina: "Nueva contraseña",
+      errores: resultado.array(),
+      csrfToken: req.csrfToken(),
+    });
+  }
+
+  //Confirmar que es el usuario actual
+  const usuario = await Usuario.findOne({ where: { token } });
+
+  //Hash nuevo password
+  const salt = await bcrypt.genSalt(10);
+  usuario.password = await bcrypt.hash(password, salt);
+
+  usuario.token = null;
+
+  await usuario.save();
+
+  res.render("auth/confirmar-cuenta", {
+    pagina: "Retablecimiento de Contraseña",
+    mensaje: "Tu contraseña ha sido retablecida correctamente",
+    error: false,
+  });
 };
 
 export {
   login,
+  authUser,
   registrar,
   registrarCuenta,
   confirmarCuenta,
   olvidarPassword,
   retablecerPassword,
   recuperarPassword,
+  nuevaPassword,
 };

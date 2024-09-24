@@ -6,15 +6,22 @@ block contenido
       span.text-red-700 Tick
     h2.text-2xl.font-bold.mb-6.text-center=pagina
 
+    if errores
+      div(id="errores" class=" max-w-md mx-auto mt-5 ")
+        each error in errores
+          p(class="bg-red-600 rounded-lg text-white text-sm font-bold text-center py-2 my-2 ")=error.msg
+
   .mx-auto.max-w-md.mt-8
     .bg-white.p-6.rounded.shadow-md
-      form(class="space-y-6")
+      form(class="space-y-6" action="/auth/login" method="POST")
+        input(type="hidden" name="_csrf" value=csrfToken)
         .mb-4
-          label(for='email' class="block text-lg font-semibold text-gray-700") Email
-          input(type="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-red-200" placeholder="Ingrese tu email")
-        .mb-4
+          label(for='identificador' class="block text-lg font-semibold text-gray-700") Email / Usuario
+          input(type="text" name="identificador" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-red-200" placeholder="Ingrese tu email o usuario" autocomplete="on" value= usuario ? usuario.identificador : "")
+        .mb-4.input-container
           label(for='password' class="block text-lg font-semibold text-gray-700") Contraseña
-          input(type="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-red-200" placeholder="Ingrese tu contraseña")
+          input(type="password" name="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-red-200" placeholder="Ingrese tu contraseña")
+          span(class="icon-eye" id="view-pass") 👁️
 
         .mb-4.flex.justify-between.itmes-center
           a(href="/auth/registrar" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿No tienes cuenta? Crea una

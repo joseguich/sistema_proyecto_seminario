@@ -15,20 +15,25 @@ block contenido
         form(class="space-y-5" action="/auth/registrar" method="POST")
           input(type="hidden" name="_csrf" value=csrfToken)
           div
-            label(for='nombre' class="block text-lg font-semibold text-gray-700") Nombre
-            input(type="text" name="nombre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" value=usuario ? usuario.nombre : "" placeholder="Ingrese su nombre")
+            label(for='nombre' class="block text-lg font-semibold text-gray-700") Nombre Completo
+            input(type="text" name="nombre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" autocomplete="on" value=usuario ? usuario.nombre : "" placeholder="Ingrese su nombre completo")
+          div
+            label(for='nombre_usuario' class="block text-lg font-semibold text-gray-700") Usuario
+            input(type="text" name="nombre_usuario" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" autocomplete="on" value=usuario ? usuario.nombre_usuario : "" placeholder="Ingrese su usuario")
 
           div
             label(for='email' class="block text-lg font-semibold text-gray-700") Email
-            input(type="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" value=usuario ? usuario.email : "" placeholder="Ingrese su email")
+            input(type="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" autocomplete="on" value=usuario ? usuario.email : "" placeholder="Ingrese su email")
 
-          div
+          div.input-container
             label(for='password' class="block text-lg font-semibold text-gray-700") Contraseña
-            input(type="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Ingrese su contraseña")
+            input(type="password" name="password"  id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Ingrese su contraseña")
+            span(class="icon-eye hidden" id="view-pass") 👁️
 
-          div
-            label(for='confirm_password' class="block text-lg font-semibold text-gray-700") Confirmar Contraseña
-            input(type="password" name="confirm_password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Confirme su contraseña")
+          div.input-container
+            label(for='confirmar_password' class="block text-lg font-semibold text-gray-700") Confirmar Contraseña
+            input(type="password" name="confirmar_password" id="confirmar_password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none" placeholder="Confirme su contraseña")
+            span(class="icon-eye hidden" id="view-confirm") 👁️
 
           div
             label(for='rol' class="block text-lg font-semibold text-gray-700") Rol de Usuario
@@ -43,5 +48,3 @@ block contenido
             a(href="/auth/olvidar-password" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Olvisdate tu contraseña?
 
           button(type="submit" class="bg-gray-700 text-lg text-white rounded-md px-5 py-2 my-5 w-full hover:bg-gray-800") Registrar
-block scripts 
-  script(src="/js/setTimeout.js")

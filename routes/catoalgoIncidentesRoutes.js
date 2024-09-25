@@ -3,10 +3,11 @@ import {
   aplicaciones,
   catalogoHome,
 } from "../controllers/catalogoIncidentesControllers.js";
+import authenticateUser from "../middleware/authMiddleware.js";
 
 const router = express();
 
-router.get("/catalogo", catalogoHome);
+router.get("/catalogo", authenticateUser, catalogoHome);
 router.get("/catalogo/aplicaciones", aplicaciones);
 
 export default router;

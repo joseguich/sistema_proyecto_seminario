@@ -18,6 +18,7 @@ const Usuario = db.define("usuario", {
   rol: { type: DataTypes.STRING, allowNull: false },
 
   token: DataTypes.STRING,
+  remember: DataTypes.STRING,
 
   confirmacion: {
     type: DataTypes.BOOLEAN,

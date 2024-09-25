@@ -1,9 +1,8 @@
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import Usuario from "../model/Usuario.js";
-import { Op, where } from "sequelize";
-import { generarJWT, generarToken } from "../helper/token.js";
+import { Op } from "sequelize";
+import { generarToken, rememberToken } from "../helper/token.js";
 import { emailRecuperacion, emailRegistrar } from "../helper/mailtrap.js";
 
 const login = (req, res) => {
@@ -14,7 +13,7 @@ const login = (req, res) => {
 };
 
 const authUser = async (req, res) => {
-  const { identificador, password } = req.body;
+  const { identificador, password, remember } = req.body;
   await check("identificador")
     .notEmpty()
     .withMessage("Campo Email es obligatorio")
@@ -78,17 +77,48 @@ const authUser = async (req, res) => {
     });
   }
 
-  const token = generarJWT({
-    id: usuario.id,
-    nombre: usuario.nombre,
-    rol: usuario.rol,
-  });
+  // Remember token
+  let expiresIn = "1d";
 
-  return res
-    .cookie("_token", token, {
+  // Validar que el recordarme este seleccioando
+  if (remember) {
+    const tokenRemember = rememberToken(
+      { id: usuario.id, nombre: usuario.nombre, rol: usuario.rol },
+      remember,
+      (expiresIn = "4d")
+    );
+
+    //Hash the token
+    const salt = await bcrypt.genSalt(10);
+    const hashRemember = await bcrypt.hashSync(tokenRemember, salt);
+
+    // Almacenar el token hash en la base de datos
+    await usuario.update(
+      { remember: hashRemember },
+      { where: { id: usuario.id } }
+    );
+
+    // Enviar el token no hash en la cookie del navegador
+    res.cookie("_auth_token", tokenRemember, {
       httpOnly: true,
-    })
-    .redirect("/catalogo");
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+  } else {
+    const tokenTemporar = rememberToken(
+      { id: usuario.id, nombre: usuario.nombre, rol: usuario.rol },
+      remember,
+      expiresIn
+    );
+
+    // NO Enviar token a la base de datos si el recordatodio no esta seleccioando
+    await usuario.update({ remember: null }, { where: { id: usuario.id } });
+
+    res.cookie("_auth_token", tokenTemporar, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+  }
+  res.redirect("/catalogo");
 };
 
 const registrar = (req, res) => {
@@ -323,6 +353,12 @@ const nuevaPassword = async (req, res) => {
   });
 };
 
+const logout = (req, res) => {
+  res.clearCookie("_auth_token");
+  res.clearCookie("_token");
+  res.redirect("/auth/login");
+};
+
 export {
   login,
   authUser,
@@ -333,4 +369,5 @@ export {
   retablecerPassword,
   recuperarPassword,
   nuevaPassword,
+  logout,
 };

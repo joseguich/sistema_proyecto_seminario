@@ -9,6 +9,7 @@ import {
   retablecerPassword,
   recuperarPassword,
   nuevaPassword,
+  logout,
 } from "../controllers/usuarioControllers.js";
 
 const router = express();
@@ -26,5 +27,7 @@ router.post("/olvidar-password", retablecerPassword);
 router.get("/olvidar-password/:token", recuperarPassword);
 
 router.post("/olvidar-password/:token", nuevaPassword);
+
+router.get("/logout", logout);
 
 export default router;

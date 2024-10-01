@@ -1,13 +1,16 @@
 import express from "express";
 import {
-  aplicaciones,
   catalogoHome,
+  crearTicket,
+  registrarTicket,
 } from "../controllers/catalogoIncidentesControllers.js";
 import authenticateUser from "../middleware/authMiddleware.js";
 
 const router = express();
 
 router.get("/catalogo", authenticateUser, catalogoHome);
-router.get("/catalogo/aplicaciones", authenticateUser, aplicaciones);
+router.get("/catalogo/crear-ticket", authenticateUser, crearTicket);
+
+router.post("/catalogo/crear-ticket", authenticateUser, registrarTicket);
 
 export default router;

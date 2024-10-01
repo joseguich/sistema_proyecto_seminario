@@ -2,9 +2,7 @@ extends ../layouts/index
 
 block contenido
   .pt-10
-    h1.text-center.font-bold.text-4xl.my-10.text-gray-500 Ges
-      span.text-red-700 Tick
-    h2.text-2xl.font-bold.mb-6.text-center=pagina
+    h1.text-4xl.font-bold.mb-6.text-center=pagina 
       if errores
         div(id="errores" class=" max-w-md mx-auto mt-5 ")
           each error in errores
@@ -40,11 +38,11 @@ block contenido
             select(name="rol" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none")
               option(value="") --Seleccione tipo de usuario--
               option(value="tecnico" selected=usuario ? usuario.rol === "tecnico" : false) Técnico
-              option(value="cajero" selected=usuario ? usuario.rol === "cajero" : false) Cajero
+              option(value="estandar" selected=usuario ? usuario.rol === "estandar" : false) Estandar
               option(value="admin" selected=usuario ? usuario.rol === "admin" : false) Administrador
 
-          div.flex.justify-between.itmes-center
-            a(href="/auth/login" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Ya tienes cuenta? Iniciar Sesión
-            a(href="/auth/olvidar-password" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Olvisdate tu contraseña?
+          //- div.flex.justify-between.itmes-center
+          //-   a(href="/auth/login" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Ya tienes cuenta? Iniciar Sesión
+          //-   a(href="/auth/olvidar-password" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Olvisdate tu contraseña?
 
           button(type="submit" class="bg-gray-700 text-lg text-white rounded-md px-5 py-2 my-5 w-full hover:bg-gray-800") Registrar

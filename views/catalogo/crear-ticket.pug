@@ -1,0 +1,42 @@
+extends ../layouts/index
+
+block contenido
+  div(class="container mx-auto p-8")
+    h1.text-3xl.font-bold.text-center.text-gray-800.shadow=pagina
+    form(acction="/catalogo/crear-ticket" method="POST" class="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto space-y-4")
+      if errores
+        div(id="errores" class="max-w-md max-auto mt-5")
+          each error in errores
+            p.text-white.text-sm.font-bold.text-center.bg-red-700.rounded.shadow.py-1.my-2=error.msg
+      input(type="hidden" name="_csrf" value=csrfToken)
+
+      div
+        label(for="categoria" class="block text-gray-700 text-lg font-bold mb-2") Seleccionar Categoria de tickets
+        select(id="categoria" name="categoria" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" )
+          option(value="") - Seleccionar -
+          if categorias
+            each categoria in categorias
+              option(value=categoria.id selected=ticket ? ticket.categoria === categoria.id : false)=categoria.nombre
+      // Detalles del ticket
+      div
+        label(for="email" class="block text-gray-700 text-lg font-bold mb-2") Correo Electronico
+        input(id="email" name="email" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Correo Electronico" value=ticket ? ticket.email : "")
+      div
+        label(for="asunto" class="block text-gray-700 text-lg font-bold mb-2") Asunto
+        input(id="asunto" name="asunto" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Asunto Ejemplo: Apliaciones no esta en función" value=ticket ? ticket.asunto : "")
+      div
+        label(for="ip" class="block text-gray-700 text-lg font-bold mb-2") IP Computadora
+        input(id="ip" name="ip" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="IP Ejemplo; 192.168.1.1" value=ticket ? ticket.ip : "") 
+
+      div
+        label(for="detalle" class="block text-gray-700 text-lg font-bold mb-2") Detalles del Ticket
+        textarea(id="detalle" name="detalle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Describe el problema..." rows="5")=ticket ? ticket.detalle : ""
+
+      // Subir imagen
+      div
+        label(for="imagen" class="block text-gray-700 text-lg font-bold mb-2") Subir Imagen (opcional)
+        input(type="file" id="imagen" name="imagen" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline")
+
+      // Botón de enviar
+      div.mt-6
+        button(type="submit" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded") Enviar Ticket

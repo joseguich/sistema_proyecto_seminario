@@ -118,8 +118,10 @@ const authUser = async (req, res) => {
 
 const registrar = (req, res) => {
   res.render("auth/registrar", {
-    pagina: "Crear Cuenta",
+    pagina: "Crear Cuenta Usuario",
     csrfToken: req.csrfToken(),
+    barra: true,
+    user: req.user.nombre,
   });
 };
 
@@ -148,9 +150,11 @@ const registrarCuenta = async (req, res) => {
   const resultado = validationResult(req);
   if (!resultado.isEmpty()) {
     return res.render("auth/registrar", {
-      pagina: "Crear Cuenta",
+      pagina: "Crear Cuenta Usuario",
       errores: resultado.array(),
       csrfToken: req.csrfToken(),
+      barra: true,
+      user: req.user.nombre,
       usuario: {
         nombre,
         nombre_usuario,
@@ -164,9 +168,11 @@ const registrarCuenta = async (req, res) => {
   const usuario = await Usuario.findOne({ where: { email } });
   if (usuario) {
     return res.render("auth/registrar", {
-      pagina: "Crear Cuenta",
+      pagina: "Crear Cuenta Usuario",
       errores: [{ msg: "Usuario ya existe" }],
       csrfToken: req.csrfToken(),
+      barra: true,
+      user: req.user.nombre,
       usuario: {
         nombre,
         nombre_usuario,
@@ -210,6 +216,8 @@ const confirmarCuenta = async (req, res) => {
       mensaje:
         "Hubo un error al confirmar la cuenta, codigo de token no valido",
       error: true,
+      barra: true,
+      user: req.user.nombre,
     });
   }
 

@@ -11,15 +11,16 @@ import {
   nuevaPassword,
   logout,
 } from "../controllers/usuarioControllers.js";
+import authenticateUser from "../middleware/authMiddleware.js";
 
 const router = express();
 
 router.get("/login", login);
 router.post("/login", authUser);
 
-router.get("/registrar", registrar);
-router.post("/registrar", registrarCuenta);
-router.get("/confirmar-cuenta/:token", confirmarCuenta);
+router.get("/registrar", authenticateUser, registrar);
+router.post("/registrar", authenticateUser, registrarCuenta);
+router.get("/confirmar-cuenta/:token", authenticateUser, confirmarCuenta);
 
 router.get("/olvidar-password", olvidarPassword);
 router.post("/olvidar-password", retablecerPassword);

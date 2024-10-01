@@ -2,7 +2,7 @@ import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import Usuario from "../model/Usuario.js";
 import { Op } from "sequelize";
-import { generarToken, rememberToken } from "../helper/token.js";
+import { generarToken, rememberTokenJTW } from "../helper/token.js";
 import { emailRecuperacion, emailRegistrar } from "../helper/mailtrap.js";
 
 const login = (req, res) => {
@@ -77,15 +77,11 @@ const authUser = async (req, res) => {
     });
   }
 
-  // Remember token
-  let expiresIn = "1d";
-
   // Validar que el recordarme este seleccioando
   if (remember) {
-    const tokenRemember = rememberToken(
+    const tokenRemember = rememberTokenJTW(
       { id: usuario.id, nombre: usuario.nombre, rol: usuario.rol },
-      remember,
-      (expiresIn = "4d")
+      remember
     );
 
     //Hash the token
@@ -101,13 +97,12 @@ const authUser = async (req, res) => {
     // Enviar el token no hash en la cookie del navegador
     res.cookie("_auth_token", tokenRemember, {
       httpOnly: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      maxAge: 4 * 24 * 60 * 60 * 1000,
     });
   } else {
-    const tokenTemporar = rememberToken(
+    const tokenTemporar = rememberTokenJTW(
       { id: usuario.id, nombre: usuario.nombre, rol: usuario.rol },
-      remember,
-      expiresIn
+      remember
     );
 
     // NO Enviar token a la base de datos si el recordatodio no esta seleccioando
@@ -115,7 +110,7 @@ const authUser = async (req, res) => {
 
     res.cookie("_auth_token", tokenTemporar, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 4 * 24 * 60 * 60 * 1000,
     });
   }
   res.redirect("/catalogo");

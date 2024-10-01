@@ -14,8 +14,8 @@ const generarJWT = (datos) =>
   );
 
 //TOKEN PARA REMEMBER
-const rememberToken = (datos, remember, dias) => {
-  const expiresIn = remember ? dias : "1d";
+const rememberTokenJTW = (datos, remember) => {
+  const expiresIn = remember ? "4d" : "2d";
   return jwt.sign(
     { id: datos.id, nombre: datos.nombre, rol: datos.rol },
     process.env.SECRET_KEY,
@@ -23,4 +23,4 @@ const rememberToken = (datos, remember, dias) => {
   );
 };
 
-export { generarToken, generarJWT, rememberToken };
+export { generarToken, generarJWT, rememberTokenJTW };

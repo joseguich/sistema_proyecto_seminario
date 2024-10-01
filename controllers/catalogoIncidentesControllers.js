@@ -11,6 +11,8 @@ const catalogoHome = (req, res) => {
 const aplicaciones = (req, res) => {
   res.render("catalogo/aplicaciones", {
     pagina: "Aplicaciones",
+    user: req.user.nombre,
+    csrfToken: req.csrfToken(),
     barra: true,
   });
 };

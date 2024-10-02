@@ -11,8 +11,11 @@ block contenido
             th.px-4.py-2.border.border-gray-300.text-left Apartamento
         tbody
             //- Aquí irán las filas generadas dinámicamente
-          
+            
             tr
-              td.px-4.py-2.border.border-gray-300= "ticket.id"
-              td.px-4.py-2.border.border-gray-300= "ticket.asunto"
-              td.px-4.py-2.border.border-gray-300= "ticket.apartamento"
+              if tickets
+                  each ticket in tickets
+                    td.px-4.py-2.border.border-gray-300= ticket.id
+                    td.px-4.py-2.border.border-gray-300= ticket.asunto
+                    td.px-4.py-2.border.border-gray-300= 
+                  

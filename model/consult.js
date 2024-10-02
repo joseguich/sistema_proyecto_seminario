@@ -1,6 +1,9 @@
-import Categoria from "./Categoria.js";
+import { Categoria, Tickets } from "./index.js";
 
 //Obtener datos Categorias de tickets
-const [categorias] = await Promise.all([Categoria.findAll()]);
+const categorias = await Categoria.findAll();
 
-export { categorias };
+// Obtener todos los datos de tickets
+const tickets = await Tickets.findAll();
+
+export { categorias, tickets };

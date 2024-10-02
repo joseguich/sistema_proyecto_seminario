@@ -8,6 +8,9 @@ CREATE TABLE
   ) ENGINE = InnoDB AUTO_INCREMENT = 15 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 
+INSERT INTO categoria(`nombre`, `createdAt`, `updatedAt`) VALUES ('Impresora', CURRENT_DATE, CURRENT_DATE);
+
+
 CREATE TABLE
   `rols` (
     `id` int NOT NULL AUTO_INCREMENT,

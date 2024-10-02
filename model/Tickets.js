@@ -3,7 +3,7 @@ import db from "../config/db.js";
 
 const Tickets = db.define("tickets", {
   id: {
-    type: DataTypes.UUID(),
+    type: DataTypes.UUID(5),
     defaultValue: DataTypes.UUIDV4,
     allowNull: false,
     primaryKey: true,

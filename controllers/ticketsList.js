@@ -1,4 +1,5 @@
 import { tickets } from "../model/consult.js";
+import { Usuario, Tickets, TicketHistory } from "../model/index.js";
 
 const ticketsList = (req, res) => {
   res.render("catalogo/ticketslist", {
@@ -17,6 +18,37 @@ const workTickets = (req, res)=>{
         user: req.user.nombre,
         barra: true,
       });
+
+      
 }
 
-export {ticketsList, workTickets};
+const buscarTicket = async (req, res)=>{
+
+  res.render("catalogo/buscarTicket", {
+    pagina: "Buscar Ticket",
+    csrfToken: req.csrfToken(),
+    user: req.user.nombre,
+    barra: true,
+    ticket: ticket,
+  });
+}
+
+const buscarTicketID = async (req, res)=>{
+  const id = req.query.ticketId;
+
+  const ticket = await Tickets.findOne({where: {id}});
+
+  res.render("catalogo/buscarTicket", {
+    pagina: "Buscar Ticket",
+    csrfToken: req.csrfToken(),
+    user: req.user.nombre,
+    barra: true,
+    ticket: ticket,
+  });
+}
+
+const detalleTicket = (req, res) => {
+  
+}
+
+export {ticketsList, workTickets, buscarTicketID, buscarTicket, detalleTicket};

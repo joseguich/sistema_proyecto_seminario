@@ -6,7 +6,7 @@ const rols = [
     nombre: "Soporte Tecnico",
   },
   {
-    nombre: "Soporte TEI",
+    nombre: "Soporte TI",
   },
 ];
 

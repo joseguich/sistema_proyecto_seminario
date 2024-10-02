@@ -22,6 +22,7 @@ const crearTicket = async (req, res) => {
   });
 };
 
+
 const registrarTicket = async (req, res) => {
   const { categoria, email, asunto, ip, detalle, imagen } = req.body;
   //Validar

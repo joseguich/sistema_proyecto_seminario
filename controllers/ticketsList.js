@@ -20,4 +20,14 @@ const workTickets = (req, res)=>{
       });
 }
 
-export {ticketsList, workTickets};
+const detalleTicket = async (req, res) => {
+  res.render("catalogo/detalleList", {
+    pagina: "Detalle Ticket",
+    user: req.user.nombre,
+    csrfToken: req.csrfToken(),
+    barra: true,
+    categorias,
+  });
+  };
+
+export {ticketsList, workTickets, detalleTicket};

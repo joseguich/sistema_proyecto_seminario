@@ -1,0 +1,36 @@
+extends ../layouts/index
+
+block contenido
+    div.container.mx-auto.mt-10
+      h2.text-xl.font-semibold.mb-6 Detalle del Ticket
+
+      //- Formulario con los detalles del ticket
+      div.bg-white.p-6.rounded-md.shadow-md
+        div.grid.grid-cols-2.gap-4.mb-4
+          label.font-bold.text-gray-700 ID:
+          span.text-gray-600 Ticket #12345
+
+          label.font-bold.text-gray-700 Correo Electrónico:
+          span.text-gray-600 usuario@ejemplo.com
+
+          label.font-bold.text-gray-700 Asunto:
+          span.text-gray-600 Problema de red
+
+          label.font-bold.text-gray-700 IP Computadora:
+          span.text-gray-600 192.168.1.1
+
+          label.font-bold.text-gray-700 Detalle:
+          span.text-gray-600 El usuario no puede conectarse a la red desde su PC.
+
+        //- Input de comentario
+        div.mb-4
+          label.block.font-bold.text-gray-700(for="comentario") Comentario:
+          textarea#comentario.placeholder-gray-500.placeholder-opacity-75.placeholder("Escribe tu comentario aquí...")(
+            class="block.w-full.bg-gray-100.border.border-gray-300.rounded-md.px-4.py-2.mt-2 h-40 resize-none"
+          )
+
+        //- Botones de acción
+        div.flex.space-x-4
+          button.bg-yellow-500.text-white.font-bold.py-2.px-4.rounded-md.shadow-md Pendiente
+          button.bg-red-500.text-white.font-bold.py-2.px-4.rounded-md.shadow-md Declinado
+          button.bg-green-500.text-white.font-bold.py-2.px-4.rounded-md.shadow-md Resuelto

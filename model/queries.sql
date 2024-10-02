@@ -47,6 +47,20 @@ CREATE TABLE
       NULL ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
+  drop Table ticket_histories
+
+  CREATE TABLE if NOT exists 
+  `ticket_histories` (
+      `id` INTEGER AUTO_INCREMENT PRIMARY KEY,
+      `id_ticket` varchar(60) NOT NULL,
+      `id_user_creador` VARCHAR(25) NOT NULL,
+      `id_user_asignado` VARCHAR(25) NOT NULL,
+      `accion` VARCHAR(60) NOT NULL,
+      `comentario` TEXT NOT NULL,
+      `createdAt` DATETIME NOT NULL,
+      `updatedAt` DATETIME NOT NULL
+  ); 
+
 
 CREATE TABLE
   `usuarios` (

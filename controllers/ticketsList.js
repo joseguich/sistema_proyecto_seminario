@@ -11,6 +11,28 @@ const ticketsList = (req, res)=>{
       });
 }
 
+const buscarTicket = (req, res)=>{
+  res.render("catalogo/buscarTicket", {
+    pagina: "Buscar Ticket",
+    csrfToken: req.csrfToken(),
+    user: req.user.nombre,
+    barra: true,
+  });
+}
+
+const buscarTicketID = async (req, res)=>{
+  const id = req.query.ticketId
+
+  const ticket = await Tickets.findOne({where: {id}});
+  
+  res.render("catalogo/buscarTicket", {
+    pagina: "Buscar Ticket",
+    csrfToken: req.csrfToken(),
+    user: req.user.nombre,
+    barra: true,
+    ticket: ticket,
+  });
+}
 const workTickets = (req, res)=>{
     res.render("catalogo/worktickets", {
         pagina: "Trabajar Tickets",
@@ -30,4 +52,4 @@ const detalleTicket = async (req, res) => {
   });
   };
 
-export {ticketsList, workTickets, detalleTicket};
+export {ticketsList, workTickets, detalleTicket, buscarTicket, buscarTicketID};

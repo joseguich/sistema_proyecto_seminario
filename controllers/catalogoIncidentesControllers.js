@@ -1,6 +1,6 @@
 import { check, validationResult } from "express-validator";
 import { categorias } from "../model/consult.js";
-import { Usuario, Tickets } from "../model/index.js";
+import { Usuario, Tickets, TicketHistory } from "../model/index.js";
 
 const catalogoHome = (req, res) => {
   console.log(req.user.nombre);
@@ -115,6 +115,14 @@ const registrarTicket = async (req, res) => {
     categoriaId: parseInt(categoria),
     imagen,
   });
+
+  let new_id = ticket.id;
+
+  const hticket = await TicketHistory.create({
+    id_ticket:new_id,
+    id_user_creador: req.user.nombre,
+    id_user_asignado: "sin asignar",
+  })
 
   ticket.save();
 

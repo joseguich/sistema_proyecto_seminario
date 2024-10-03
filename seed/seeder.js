@@ -1,9 +1,8 @@
 import { exit, argv } from "node:process";
-import { Categoria, Rols, Tickets } from "../model/index.js";
+import { Categoria, Rols, Tickets, TicketHistory } from "../model/index.js";
 import categorias from "./categoria..js";
 import rols from "./rols.js";
 import db from "../config/db.js";
-import { truncate } from "node:fs";
 
 const importarDatos = async () => {
   try {

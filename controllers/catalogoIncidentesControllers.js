@@ -22,7 +22,6 @@ const crearTicket = async (req, res) => {
   });
 };
 
-
 const registrarTicket = async (req, res) => {
   const { categoria, email, asunto, ip, detalle, imagen } = req.body;
   //Validar
@@ -118,13 +117,11 @@ const registrarTicket = async (req, res) => {
 
   let new_id = ticket.id;
 
-  const hticket = await TicketHistory.create({
-    id_ticket:new_id,
+  await TicketHistory.create({
+    id_ticket: new_id,
     id_user_creador: req.user.nombre,
     id_user_asignado: "sin asignar",
-  })
-
-  ticket.save();
+  });
 
   res.render("template/mensaje", {
     pagina: "Creación de Ticket",

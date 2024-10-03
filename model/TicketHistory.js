@@ -3,7 +3,8 @@ import db from "../config/db.js";
 
 const TicketHistory = db.define("ticket_histories", {
   id_ticket: {
-    type: DataTypes.NUMBER
+    type: DataTypes.STRING,
+    allowNull: false,
   },
 
   id_user_creador: {
@@ -17,19 +18,14 @@ const TicketHistory = db.define("ticket_histories", {
   },
 
   accion: {
-    type: DataTypes.STRING(60),
-    defaultValue: "Pendiente"
+    type: DataTypes.ENUM("Pendiente", "Declinado", "Completado"),
+    defaultValue: "Pendiente",
   },
 
   comentario: {
     type: DataTypes.TEXT,
-    defaultValue: "No se ha agregado comentario"
+    defaultValue: "No se ha agregado comentario",
   },
-
-  fecha_actualizacion: {
-    type: DataTypes.DATE,
-  },
-
 });
 
 export default TicketHistory;

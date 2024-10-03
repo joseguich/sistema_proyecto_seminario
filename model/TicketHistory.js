@@ -3,7 +3,7 @@ import db from "../config/db.js";
 
 const TicketHistory = db.define("ticket_histories", {
   id_ticket: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 

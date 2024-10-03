@@ -4,6 +4,7 @@ import Usuario from "../model/Usuario.js";
 import { Op } from "sequelize";
 import { generarToken, rememberTokenJTW } from "../helper/token.js";
 import { emailRecuperacion, emailRegistrar } from "../helper/mailtrap.js";
+import { rols } from "../queries/consult.js";
 
 const login = (req, res) => {
   res.render("auth/login", {
@@ -117,11 +118,21 @@ const authUser = async (req, res) => {
 };
 
 const registrar = (req, res) => {
+  if (req.user.rol !== "Administrador") {
+    return res.render("catalogo/home", {
+      pagina: "Catalogo Incidentes",
+      mensaje: "No tienes permisos para acceder a esta opción de crear usuario",
+      user: req.user.nombre,
+      barra: true,
+      alerta: true,
+    });
+  }
   res.render("auth/registrar", {
     pagina: "Crear Cuenta Usuario",
     csrfToken: req.csrfToken(),
     barra: true,
     user: req.user.nombre,
+    rols,
   });
 };
 
@@ -161,6 +172,7 @@ const registrarCuenta = async (req, res) => {
         email,
         rol,
       },
+      rols,
     });
   }
 
@@ -178,6 +190,7 @@ const registrarCuenta = async (req, res) => {
         nombre_usuario,
         email,
       },
+      rols,
     });
   }
 
@@ -203,6 +216,7 @@ const registrarCuenta = async (req, res) => {
   res.render("template/mensaje", {
     pagina: "Cuenta creada",
     mensaje: "Cuenta fue creada correctamente, solo seria confirmarla",
+    exit: true,
   });
 };
 

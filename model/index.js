@@ -11,6 +11,6 @@ Tickets.belongsTo(Usuario, { foreignKey: "usuarioId" });
 Tickets.belongsTo(Categoria, { foreignKey: "categoriaId" });
 
 //Relación de la tabla rol
-Tickets.belongsTo(Rols, { foreignKey: "rolsId" });
+// Tickets.belongsTo(Rols, { foreignKey: "rolsId" });
 
 export { Usuario, Tickets, Categoria, Rols, TicketHistory };

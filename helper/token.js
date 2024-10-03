@@ -23,4 +23,7 @@ const rememberTokenJTW = (datos, remember) => {
   );
 };
 
-export { generarToken, generarJWT, rememberTokenJTW };
+// Generar ID
+const generarIdIdentificacion = () => Math.floor(1000 + Math.random() * 90000);
+
+export { generarToken, rememberTokenJTW, generarIdIdentificacion };

@@ -8,6 +8,9 @@ const rols = [
   {
     nombre: "Soporte TI",
   },
+  {
+    nombre: "Estándar",
+  },
 ];
 
 export default rols;

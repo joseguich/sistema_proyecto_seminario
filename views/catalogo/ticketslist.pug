@@ -1,21 +1,21 @@
 extends ../layouts/index
 
 block contenido
-    div.container.mx-auto.mt-10
-      h2.text-4xl.font-semibold.mb-6.text-center=pagina
-      table.min-w-full.bg-white.border.border-gray-300.mx-auto.max-w-md
-        thead
-          tr.bg-gray-800.text-white
-            th.px-4.py-2.border.border-gray-300.text-left Id
-            th.px-4.py-2.border.border-gray-300.text-left Asunto
-            th.px-4.py-2.border.border-gray-300.text-left Apartamento
+  div.container.mx-auto.mt-10
+    h2(class="text-2xl md:text-3xl font-semibold mb-6 text-center border-b-2 border-gray-300 pb-1")=pagina
+    table(class="min-w-full bg-white border border-gray-300 mx-auto sm:max-w-md")
+      thead
+        tr.bg-gray-800.text-white
+          th.px-4.py-2.border.border-gray-300.text-left.font-bold ID
+          th.px-4.py-2.border.border-gray-300.text-left Asunto
+          th.px-4.py-2.border.border-gray-300.text-left Apartamento
+          th.px-4.py-2.border.border-gray-300.text-left Estatus
         tbody
-            //- Aquí irán las filas generadas dinámicamente
-            
-            tr
-              if tickets
-                  each ticket in tickets
-                    td.px-4.py-2.border.border-gray-300=ticket.id
-                    td.px-4.py-2.border.border-gray-300=ticket.asunto
-                    td.px-4.py-2.border.border-gray-300=ticket.rolsID
-                  
+          if tickets
+            each ticket in tickets
+              tr
+                td.px-4.py-2.border.border-gray-300.font-bold=ticket.id
+                td.px-4.py-2.border.border-gray-300=ticket.asunto
+                td.px-4.py-2.border.border-gray-300.capitalize=ticket.rol
+                td.px-4.py-2.border.border-gray-300.capitalize=ticket.estatus
+

@@ -1,10 +1,11 @@
 import { DataTypes } from "sequelize";
 import db from "../config/db.js";
+import { generarIdIdentificacion } from "../helper/token.js";
 
 const Tickets = db.define("tickets", {
   id: {
-    type: DataTypes.UUID(5),
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    defaultValue: generarIdIdentificacion,
     allowNull: false,
     primaryKey: true,
   },
@@ -27,6 +28,11 @@ const Tickets = db.define("tickets", {
   detalle_ticket: {
     type: DataTypes.TEXT,
     allowNull: false,
+  },
+
+  rol: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 
   estatus: {

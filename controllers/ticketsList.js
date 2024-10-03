@@ -1,4 +1,4 @@
-import { tickets } from "../model/consult.js";
+import { tickets } from "../queries/consult.js";
 import { Usuario, Tickets, TicketHistory } from "../model/index.js";
 import { check, validationResult } from "express-validator";
 
@@ -13,6 +13,16 @@ const ticketsList = (req, res) => {
 };
 
 const workTickets = (req, res) => {
+  if (req.user.rol !== "Administrador") {
+    return res.render("catalogo/home", {
+      pagina: "Catalogo Incidentes",
+      mensaje:
+        "No tienes permisos para acceder a esta opción de trabajar tickets",
+      user: req.user.nombre,
+      barra: true,
+      alerta: true,
+    });
+  }
   res.render("catalogo/worktickets", {
     pagina: "Trabajar Tickets",
     csrfToken: req.csrfToken(),
@@ -22,6 +32,17 @@ const workTickets = (req, res) => {
 };
 
 const buscarTicket = async (req, res) => {
+  console.log(req.user);
+  if (req.user.rol !== "Administrador") {
+    return res.render("catalogo/home", {
+      pagina: "Catalogo Incidentes",
+      mensaje: "No tienes permisos para acceder a esta opción de buscar ticket",
+      user: req.user.nombre,
+      csrfToken: req.csrfToken(),
+      barra: true,
+      alerta: true,
+    });
+  }
   res.render("catalogo/buscarTicket", {
     pagina: "Buscar Ticket",
     csrfToken: req.csrfToken(),

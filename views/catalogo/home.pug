@@ -1,6 +1,10 @@
 extends ../layouts/index
 block contenido
 
+  if alerta
+    div(id="errores" class="max-w-6xl mx-auto mt-10")
+      p(class="bg-red-100 text-red-500 border-red-800 text-md text-center font-bold rounded-lg py-2")=mensaje
+
   div(class="container mx-auto p-6")
     h1.text-2xl.font-bold.mb-6.ml-6.shadow-lg.bg-gray-100.py-2 Catálogo de incidentes
     div(class="max-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6")

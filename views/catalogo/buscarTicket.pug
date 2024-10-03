@@ -2,43 +2,43 @@ extends ../layouts/index
 
 block contenido
 
-    h1.text-3xl.font-bold.text-center.text-gray-800.shadow=pagina
-    form(action="/catalogo/buscar-ticketID" method="GET" class="flex items-center space-x-4 bg-gray-100 p-4 rounded-md shadow-md")
-        input(type="text" name="ticketId" placeholder="Buscar ticket por ID" class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value=ticket ? ticket.id : "")
-        button.bg-blue-500.text-white.font-semibold.px-4.py-2.rounded-md(type="submit") Buscar
+  h1.text-3xl.font-bold.text-center.text-gray-800.shadow=pagina
+  form(action="/catalogo/buscar-ticketID" method="GET" class="flex items-center space-x-4 bg-gray-100 p-4 rounded-md shadow-md")
+    input(type="text" name="ticketId" placeholder="Buscar ticket por ID" class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value=ticket ? ticket.id : "")
+    button.bg-blue-500.text-white.font-semibold.px-4.py-2.rounded-md(type="submit") Buscar
 
-    if errores
-            div(id="errores" class="max-w-7xl mx-auto mt-5")
-                each error in errores
-                    p.text-red-500.border-red-700.text-sm.font-bold.text-center.bg-red-100.rounded.shadow.py-2.my-2=error.msg
+  if errores
+    div(id="errores" class="max-w-7xl mx-auto mt-5")
+      each error in errores
+        p.text-red-500.border-red-700.text-sm.font-bold.text-center.bg-red-100.rounded.shadow.py-2.my-2=error.msg
 
-    if ticket 
-        form(acction="/catalogo/crear-ticket" method="POST" class="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto space-y-4 mt-10")
-          h1(class="text-center font-bold text-2xl") Reporter del Ticket a Trabajar
-          div.bg-white.p-6.rounded-md.shadow-md
-            div.grid.grid-cols-2.gap-4.mb-4
-                div(class="w-1/2")
-                    label.font-bold.text-gray-700.block ID:
-                    input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200" value=ticket.id disabled)
-                div(class="w-1/2")
-                    label.font-bold.text-gray-700.block Correo Electrónico:
-                    input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200 " value=ticket.email disabled)
+  if ticket 
+    form(acction="/catalogo/crear-ticket" method="POST" class="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto space-y-4 mt-10")
+      h1(class="text-center font-bold text-2xl") Reporter del Ticket a Trabajar
+      div.bg-white.p-6.rounded-md.shadow-md
+        div.grid.grid-cols-2.gap-4.mb-4
+          div(class="w-1/2")
+            label.font-bold.text-gray-700.block ID:
+            input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200" value=ticket.id disabled)
+          div(class="w-1/2")
+            label.font-bold.text-gray-700.block Correo Electrónico:
+            input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200 " value=ticket.email disabled)
 
-                div(class="w-1/2")
-                    label.font-bold.text-gray-700.block Asunto:
-                    input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200" value=ticket.asunto disabled)
+          div(class="w-1/2")
+            label.font-bold.text-gray-700.block Asunto:
+            input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200" value=ticket.asunto disabled)
 
-                div(class="w-1/2")
-                    label.font-bold.text-gray-700.block IP Computadora:
-                    input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200" value=ticket.ip disabled)
+          div(class="w-1/2")
+            label.font-bold.text-gray-700.block IP Computadora:
+            input(class="w-80 p-1 px-2 rounded-md font-bold text-sm border bg-gray-200" value=ticket.ip disabled)
 
 
-                div(class="")
-                    label.block.font-bold.text-gray-700(for="comentario") Detalle:
-                    textarea(id="detalle_ticket" class="block w-full bg-gray-200 border border-gray-300 rounded-md px-4 py-2 mt-2 h-40 resize-none placeholder-gray-500 placeholder-opacity-75" disabled)=ticket.detalle_ticket
+          div(class="")
+            label.block.font-bold.text-gray-700(for="comentario") Detalle:
+            textarea(id="detalle_ticket" class="block w-full bg-gray-200  border border-gray-300 rounded-md px-4 py-2 mt-2 h-40 resize-none placeholder-gray-500 font-bold placeholder-opacity-75" disabled)=ticket.detalle_ticket
 
-                //- Input de comentario
-                div(class="")
-                    label.block.font-bold.text-gray-700(for="comentario") Comentario:
-                    textarea(id="comentario" class="block w-full bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mt-2 h-40 resize-none placeholder-gray-500 placeholder-opacity-75" placeholder="Escribe tu comentario aquí...")
+          //- Input de comentario
+          div(class="")
+            label.block.font-bold.text-gray-700(for="comentario") Comentario:
+            textarea(id="comentario" class="block w-full bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mt-2 h-40 resize-none placeholder-gray-500 placeholder-opacity-75" placeholder="Escribe tu comentario aquí...")
 

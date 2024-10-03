@@ -1,9 +1,15 @@
 import { check, validationResult } from "express-validator";
-import { categorias } from "../model/consult.js";
-import { Usuario, Tickets, TicketHistory } from "../model/index.js";
+import { categorias } from "../queries/consult.js";
+import {
+  Usuario,
+  Tickets,
+  TicketHistory,
+  Rols,
+  Categoria,
+} from "../model/index.js";
+import { where } from "sequelize";
 
 const catalogoHome = (req, res) => {
-  console.log(req.user.nombre);
   res.render("catalogo/home", {
     pagina: "Catalogo Incidentes",
     csrfToken: req.csrfToken(),
@@ -83,7 +89,7 @@ const registrarTicket = async (req, res) => {
     });
   }
 
-  if (usuario.rol !== "estandar") {
+  if (usuario.rol !== "Estándar") {
     return res.render("catalogo/crear-ticket", {
       pagina: "Crear Nuevo Ticket",
       csrfToken: req.csrfToken(),
@@ -115,11 +121,41 @@ const registrarTicket = async (req, res) => {
     imagen,
   });
 
-  let new_id = ticket.id;
+  // Selecionamos la columna especifica con attributes
+  const rolUsuario = await Rols.findAll({ attributes: ["nombre"] });
+  const rolesDisponibles = rolUsuario
+    .map((rol) => rol.nombre)
+    .filter((nombre) => nombre !== "Estándar")
+    .filter((nombre) => nombre !== "Administrador");
+
+  // Buscar la categoria selecionada por id
+  const seleccionarCategorias = await Categoria.findOne({
+    where: { id: categoria },
+  });
+
+  //Obtener los datos de las categorias
+  const catgoriasSeleccionada = {
+    Dispositivos: rolesDisponibles[0],
+    Impresoras: rolesDisponibles[1],
+  };
+
+  let rolAsignado = "Soport General"
+
+  // Obtener los datos de las categorias 
+  for (const [claveCategoria, rol] of Object.entries(catgoriasSeleccionada)) {
+    //startsWith: compara si la cadena comienza con el texto especificado
+    if (seleccionarCategorias.nombre.startsWith(claveCategoria)) {
+      rolAsignado = rol
+      break;
+    }
+  }
+
+  ticket.rol = rolAsignado;
+  await ticket.save();
 
   await TicketHistory.create({
-    id_ticket: new_id,
-    id_user_creador: req.user.nombre,
+    id_ticket: ticket.id,
+    id_user_creador: req.user.nombre_usuario,
     id_user_asignado: "sin asignar",
   });
 

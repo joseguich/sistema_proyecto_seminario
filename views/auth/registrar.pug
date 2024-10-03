@@ -37,9 +37,10 @@ block contenido
             label(for='rol' class="block text-lg font-semibold text-gray-700") Rol de Usuario
             select(name="rol" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md outline-none")
               option(value="") --Seleccione tipo de usuario--
-              option(value="tecnico" selected=usuario ? usuario.rol === "tecnico" : false) Técnico
-              option(value="estandar" selected=usuario ? usuario.rol === "estandar" : false) Estandar
-              option(value="admin" selected=usuario ? usuario.rol === "admin" : false) Administrador
+              if rols
+                each rold in rols
+                  option(value=rold.nombre selected=usuario ? usuario.rol == rold.nombre : false)=rold.nombre
+
 
           //- div.flex.justify-between.itmes-center
           //-   a(href="/auth/login" class="text-sm text-gray-400 font-semibold hover:text-red-700") ¿Ya tienes cuenta? Iniciar Sesión

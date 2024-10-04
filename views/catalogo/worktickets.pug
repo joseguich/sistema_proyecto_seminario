@@ -1,21 +1,30 @@
 extends ../layouts/index
 
 block contenido
-    div.container.mx-auto.mt-10
-      h2.text-4xl.font-semibold.mb-6.text-center=pagina
-      table.min-w-full.bg-white.border.border-gray-300.mx-auto.max-w-md
-        thead
-          tr.bg-gray-800.text-white
-            th.px-4.py-2.border.border-gray-300.text-left Id
-            th.px-4.py-2.border.border-gray-300.text-left Asunto
-            th.px-4.py-2.border.border-gray-300.text-left Apartamento
-            th.px-4.py-2.border.border-gray-300.text-left Acción
-        tbody
-            //- Aquí irán las filas generadas dinámicamente
-            //each ticket in tickets
+  div.container.mx-auto.mt-10
+    h2.text-4xl.font-semibold.mb-6.text-center=pagina
+    table.min-w-full.bg-white.border.border-gray-300.mx-auto.max-w-md
+      thead
+        tr.bg-gray-800.text-white
+          th.px-4.py-2.border.border-gray-300.text-left Id
+          th.px-4.py-2.border.border-gray-300.text-left Asunto
+          th.px-4.py-2.border.border-gray-300.text-left Apartamento
+          th.px-4.py-2.border.border-gray-300.text-left Acción
+      tbody
+        //- Aquí irán las filas generadas dinámicamente
+        //each ticket in tickets
+        if tickets
+          each ticket in tickets
             tr
-              td.px-4.py-2.border.border-gray-300= "ticket.id"
-              td.px-4.py-2.border.border-gray-300= "ticket.asunto"
-              td.px-4.py-2.border.border-gray-300= "ticket.apartamento"
+              td.px-4.py-2.border.border-gray-300= ticket.id
+              td.px-4.py-2.border.border-gray-300= ticket.asunto
+              td.px-4.py-2.border.border-gray-300= ticket.rol
               td.px-4.py-2.border.border-gray-300
-                a.bg-green-500.text-white.font-semibold.px-4.py-2.rounded-md(href="/catalogo/detalle-ticket") Trabajar
+                a(class=" bg-gray-600 hover:bg-gray-700 text-white font-semibold px-4 py-2 rounded-xl text-center block" href=`/catalogo/asignar-ticket/`) Asignar Ticket
+
+    if tickets.length === 0
+      div
+        p.bg-gray-700.text-white.font-bold.text-center.p-4.rounded-md.shadow-md.mt-10 No hay tickets pendientes de trabajar
+
+
+

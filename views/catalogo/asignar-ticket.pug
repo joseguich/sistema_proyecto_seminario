@@ -1,0 +1,21 @@
+extends ../layouts/index
+
+block contenido
+  div
+    h1.text-3xl.font-bold.text-center.text-gray-800.shadow=pagina
+    form(action="" method="" class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto space-y-4")
+      if errores
+        div(id="errores" class="max-w-md max-auto mt-5")
+          each error in errores
+            p.text-white.text-sm.font-bold.text-center.bg-red-700.rounded.shadow.py-1.my-2=error.msg
+      input(type="hidden" name="_csrf" value=csrfToken)
+
+      div
+        label(for="categoria" class="block text-gray-700 text-lg font-bold mb-2") Seleccionar Categoria de tickets
+        select(id="categoria" name="categoria" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" )
+          option(value="") - Seleccionar -
+          if usuarios
+            each usuario in usuarios
+              option(value=usuario.rol )= usuario.nombre
+
+      input(type="submit" class="block cursor-pointer text-gray-700 text-lg font-bold mb-2 w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" value="Asignar Ticket")

@@ -28,6 +28,7 @@ const workTickets = (req, res) => {
     csrfToken: req.csrfToken(),
     user: req.user.nombre,
     barra: true,
+    tickets,
   });
 };
 
@@ -93,7 +94,9 @@ const buscarTicketID = async (req, res) => {
   });
 };
 
-const detalleTicket = (req, res) => {};
+const detalleTicket = (req, res) => {
+
+};
 
 export {
   ticketsList,

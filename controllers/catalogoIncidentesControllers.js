@@ -7,7 +7,6 @@ import {
   Rols,
   Categoria,
 } from "../model/index.js";
-import { where } from "sequelize";
 
 const catalogoHome = (req, res) => {
   res.render("catalogo/home", {
@@ -111,27 +110,31 @@ const registrarTicket = async (req, res) => {
     });
   }
 
-  const ticket = await Tickets.create({
-    email,
-    asunto,
-    ip,
-    detalle_ticket: detalle,
-    usuarioId: usuario.id,
-    categoriaId: parseInt(categoria),
-    imagen,
-  });
+  // const ticket = await Tickets.create({
+  //   email,
+  //   asunto,
+  //   ip,
+  //   detalle_ticket: detalle,
+  //   usuarioId: usuario.id,
+  //   categoriaId: parseInt(categoria),
+  //   imagen,
+  // });
 
   // Selecionamos la columna especifica con attributes
-  const rolUsuario = await Rols.findAll({ attributes: ["nombre"] });
+  const rolUsuario = await Usuario.findAll({ attributes: ["nombre", "rol"] });
+
   const rolesDisponibles = rolUsuario
-    .map((rol) => rol.nombre)
+    .map((rol) => rol.rol)
     .filter((nombre) => nombre !== "Estándar")
     .filter((nombre) => nombre !== "Administrador");
+  console.log(rolesDisponibles);
 
   // Buscar la categoria selecionada por id
   const seleccionarCategorias = await Categoria.findOne({
     where: { id: categoria },
   });
+  // console.log(rolesDisponibles);
+  return
 
   //Obtener los datos de las categorias
   const catgoriasSeleccionada = {
@@ -166,4 +169,18 @@ const registrarTicket = async (req, res) => {
   });
 };
 
-export { catalogoHome, crearTicket, registrarTicket };
+const asignarTicket = async (req, res) => {
+
+  const usuarios = await (await Usuario.findAll()).filter(usuario => usuario.rol !== "Administrador").filter(usuario => usuario.rol !== "Estándar");
+
+  res.render("catalogo/asignar-ticket", {
+    pagina: "Asignar Ticket a Trabajar",
+    csrfToken: req.csrfToken(),
+    user: req.user.nombre,
+    barra: true,
+    usuarios,
+  })
+
+}
+
+export { catalogoHome, crearTicket, registrarTicket, asignarTicket };

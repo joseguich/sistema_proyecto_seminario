@@ -26,6 +26,8 @@ block contenido
                     span.px-2.py-1.rounded-xl.shadow.w-32.text-white.bg-green-700.capitalize=ticket.estatus
                   else if ticket.estatus === "En proceso"
                     span.px-2.py-1.rounded-xl.shadow.w-32.text-white.bg-blue-700.capitalize=ticket.estatus
-
+    if tickets.length === 0
+      div
+        p.bg-gray-700.text-white.font-bold.text-center.p-4.rounded-md.shadow-md.mt-10 No hay reporte de tickets para solucionar
 
 

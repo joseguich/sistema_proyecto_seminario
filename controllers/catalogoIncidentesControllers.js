@@ -110,31 +110,30 @@ const registrarTicket = async (req, res) => {
     });
   }
 
-  // const ticket = await Tickets.create({
-  //   email,
-  //   asunto,
-  //   ip,
-  //   detalle_ticket: detalle,
-  //   usuarioId: usuario.id,
-  //   categoriaId: parseInt(categoria),
-  //   imagen,
-  // });
+  const ticket = await Tickets.create({
+    email,
+    asunto,
+    ip,
+    detalle_ticket: detalle,
+    usuarioId: usuario.id,
+    categoriaId: parseInt(categoria),
+    imagen,
+  });
 
   // Selecionamos la columna especifica con attributes
-  const rolUsuario = await Usuario.findAll({ attributes: ["nombre", "rol"] });
+  const rolUsuario = await Rols.findAll({ attributes: ["nombre"] });
 
   const rolesDisponibles = rolUsuario
-    .map((rol) => rol.rol)
+    .map((rol) => rol.nombre)
     .filter((nombre) => nombre !== "Estándar")
     .filter((nombre) => nombre !== "Administrador");
-  console.log(rolesDisponibles);
+
 
   // Buscar la categoria selecionada por id
   const seleccionarCategorias = await Categoria.findOne({
     where: { id: categoria },
   });
-  // console.log(rolesDisponibles);
-  return
+
 
   //Obtener los datos de las categorias
   const catgoriasSeleccionada = {
@@ -156,10 +155,27 @@ const registrarTicket = async (req, res) => {
   ticket.rol = rolAsignado;
   await ticket.save();
 
+  const usuarios = await Usuario.findAll({
+    where: { rol: rolAsignado }, // Filtrar usuarios por el rol asignado
+  });
+
+  // Verificar que haya usuarios con ese rol
+  if (usuarios.length === 0) {
+    return res.render("template/mensaje", {
+      pagina: "Error en la creación de Ticket",
+      mensaje: "No hay usuarios disponibles para este rol",
+      exit: false,
+    });
+  }
+
+  // Seleccionar un usuario aleatorio
+  const usuarioAsignado = usuarios[Math.floor(Math.random() * usuarios.length)];
+
+  // Guardar el historial del ticket con el usuario asignado aleatoriamente
   await TicketHistory.create({
     id_ticket: ticket.id,
     id_user_creador: req.user.nombre_usuario,
-    id_user_asignado: "sin asignar",
+    id_user_asignado: usuarioAsignado.nombre,
   });
 
   res.render("template/mensaje", {
@@ -168,7 +184,6 @@ const registrarTicket = async (req, res) => {
     exit: true,
   });
 };
-
 const asignarTicket = async (req, res) => {
 
   const usuarios = await (await Usuario.findAll()).filter(usuario => usuario.rol !== "Administrador").filter(usuario => usuario.rol !== "Estándar");

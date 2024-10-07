@@ -30,7 +30,7 @@ try {
   await db.authenticate();
   console.log("Conexión correcta a la base de datos");
 
-  db.sync();
+  await db.sync();
 } catch (error) {
   console.log(`Error al conectar a la base de datos: ${error}`);
 }

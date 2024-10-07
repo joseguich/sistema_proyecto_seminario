@@ -18,6 +18,17 @@ const catalogoHome = (req, res) => {
 };
 
 const crearTicket = async (req, res) => {
+  if (req.user.rol !== "Administrador" && req.user.rol !== "Estándar") {
+    return res.render("catalogo/home", {
+      pagina: "Catalogo Incidentes",
+      mensaje:
+        "No tienes permisos para acceder a esta opción para crear ticket",
+      user: req.user.nombre,
+      barra: true,
+      alerta: true,
+    });
+  }
+
   res.render("catalogo/crear-ticket", {
     pagina: "Crear Nuevo Ticket",
     user: req.user.nombre,
@@ -96,7 +107,7 @@ const registrarTicket = async (req, res) => {
       barra: true,
       errores: [
         {
-          msg: "Correo para la creación de tickets solo puede ser de un usuario de tipo Estandar",
+          msg: "Correo para la creación de tickets solo puede ser de un usuario de tipo Estándar",
         },
       ],
       user: req.user.nombre,
@@ -107,6 +118,38 @@ const registrarTicket = async (req, res) => {
         ip,
         detalle,
       },
+    });
+  }
+
+  if (req.user.rol === "Administrador") {
+    if (req.user.email !== usuario.email) {
+      res.render("template/mensaje", {
+        pagina: "Creación de Ticket",
+        mensaje: "Ticket creado correctamente",
+        exit: true,
+        barra: true,
+        user: req.user.nombre,
+      });
+    }
+  } else if (req.user.email !== usuario.email) {
+    return res.render("catalogo/crear-ticket", {
+      pagina: "Crear Nuevo Ticket",
+      csrfToken: req.csrfToken(),
+      categorias,
+      user: req.user.nombre,
+      ticket: {
+        categoria: parseInt(categoria),
+        email,
+        asunto,
+        ip,
+        detalle,
+      },
+      errores: [
+        {
+          msg: "Introduzca su correo correctamente, con el cual se creo su credenciales",
+        },
+      ],
+      barra: true,
     });
   }
 
@@ -128,12 +171,10 @@ const registrarTicket = async (req, res) => {
     .filter((nombre) => nombre !== "Estándar")
     .filter((nombre) => nombre !== "Administrador");
 
-
   // Buscar la categoria selecionada por id
   const seleccionarCategorias = await Categoria.findOne({
     where: { id: categoria },
   });
-
 
   //Obtener los datos de las categorias
   const catgoriasSeleccionada = {
@@ -141,19 +182,18 @@ const registrarTicket = async (req, res) => {
     Impresoras: rolesDisponibles[1],
   };
 
-  let rolAsignado = "Soport General"
+  let rolAsignado = rolesDisponibles[2];
 
-  // Obtener los datos de las categorias 
+  // Obtener los datos de las categorias
   for (const [claveCategoria, rol] of Object.entries(catgoriasSeleccionada)) {
     //startsWith: compara si la cadena comienza con el texto especificado
     if (seleccionarCategorias.nombre.startsWith(claveCategoria)) {
-      rolAsignado = rol
+      rolAsignado = rol;
       break;
     }
   }
 
   ticket.rol = rolAsignado;
-  await ticket.save();
 
   const usuarios = await Usuario.findAll({
     where: { rol: rolAsignado }, // Filtrar usuarios por el rol asignado
@@ -171,6 +211,8 @@ const registrarTicket = async (req, res) => {
   // Seleccionar un usuario aleatorio
   const usuarioAsignado = usuarios[Math.floor(Math.random() * usuarios.length)];
 
+  ticket.id_user_asignado = usuarioAsignado.nombre;
+  await ticket.save();
   // Guardar el historial del ticket con el usuario asignado aleatoriamente
   await TicketHistory.create({
     id_ticket: ticket.id,
@@ -182,20 +224,9 @@ const registrarTicket = async (req, res) => {
     pagina: "Creación de Ticket",
     mensaje: "Ticket creado correctamente",
     exit: true,
+    barra: true,
+    user: req.user.nombre,
   });
 };
-const asignarTicket = async (req, res) => {
 
-  const usuarios = await (await Usuario.findAll()).filter(usuario => usuario.rol !== "Administrador").filter(usuario => usuario.rol !== "Estándar");
-
-  res.render("catalogo/asignar-ticket", {
-    pagina: "Asignar Ticket a Trabajar",
-    csrfToken: req.csrfToken(),
-    user: req.user.nombre,
-    barra: true,
-    usuarios,
-  })
-
-}
-
-export { catalogoHome, crearTicket, registrarTicket, asignarTicket };
+export { catalogoHome, crearTicket, registrarTicket };

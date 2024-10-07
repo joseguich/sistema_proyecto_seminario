@@ -9,14 +9,16 @@ block contenido
           th.px-4.py-2.border.border-gray-300.text-left.font-bold ID
           th.px-4.py-2.border.border-gray-300.text-left Asunto
           th.px-4.py-2.border.border-gray-300.text-left Apartamento
+          th.px-4.py-2.border.border-gray-300.text-left Encargado de Reporte
           th.px-4.py-2.border.border-gray-300.text-left Estatus
         tbody
           if tickets
             each ticket in tickets
-              tr
+              tr(class="text-center")
                 td.px-4.py-2.border.border-gray-300.font-bold=ticket.id
                 td.px-4.py-2.border.border-gray-300=ticket.asunto
                 td.px-4.py-2.border.border-gray-300.capitalize=ticket.rol
+                td.px-4.py-2.border.border-gray-300.capitalize=ticket.id_user_asignado
                 td.px-4.py-2.border.border-gray-300.capitalize.flex.justify-center.items-center.text-center
                   if ticket.estatus === "pendiente"
                     span.px-2.py-1.rounded-xl.shadow.w-32.text-white.bg-red-700.capitalize=ticket.estatus
@@ -26,6 +28,7 @@ block contenido
                     span.px-2.py-1.rounded-xl.shadow.w-32.text-white.bg-green-700.capitalize=ticket.estatus
                   else if ticket.estatus === "En proceso"
                     span.px-2.py-1.rounded-xl.shadow.w-32.text-white.bg-blue-700.capitalize=ticket.estatus
+                
     if tickets.length === 0
       div
         p.bg-gray-700.text-white.font-bold.text-center.p-4.rounded-md.shadow-md.mt-10 No hay reporte de tickets para solucionar

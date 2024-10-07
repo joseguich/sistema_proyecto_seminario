@@ -17,7 +17,7 @@ const authUser = async (req, res) => {
   const { identificador, password, remember } = req.body;
   await check("identificador")
     .notEmpty()
-    .withMessage("Campo Email es obligatorio")
+    .withMessage("Campo Email o usuario es obligatorio")
     .run(req);
   await check("password")
     .notEmpty()
@@ -217,6 +217,7 @@ const registrarCuenta = async (req, res) => {
     pagina: "Cuenta creada",
     mensaje: "Cuenta fue creada correctamente, solo seria confirmarla",
     exit: true,
+    barra: true,
   });
 };
 

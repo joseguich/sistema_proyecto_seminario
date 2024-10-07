@@ -1,8 +1,21 @@
-import { tickets } from "../queries/consult.js";
-import { Usuario, Tickets, TicketHistory } from "../model/index.js";
+// import { Usuario, Tickets, TicketHistory } from "../model/index.js";
+import Tickets from "../model/Tickets.js";
 import { check, validationResult } from "express-validator";
 
-const ticketsList = (req, res) => {
+const ticketsList = async (req, res) => {
+  let tickets;
+  if (req.user.rol === "Administrador") {
+    tickets = await Tickets.findAll();
+  } else if (req.user.rol === "Estándar") {
+    tickets = await Tickets.findAll({
+      where: { usuarioId: req.user.id },
+    });
+  } else {
+    tickets = await Tickets.findAll({
+      where: { id_user_asignado: req.user.nombre },
+    });
+  }
+
   res.render("catalogo/ticketslist", {
     pagina: "Lista de Tickets",
     csrfToken: req.csrfToken(),
@@ -12,8 +25,8 @@ const ticketsList = (req, res) => {
   });
 };
 
-const workTickets = (req, res) => {
-  if (req.user.rol !== "Administrador") {
+const workTickets = async (req, res) => {
+  if (req.user.rol === "Estándar") {
     return res.render("catalogo/home", {
       pagina: "Catalogo Incidentes",
       mensaje:
@@ -21,6 +34,14 @@ const workTickets = (req, res) => {
       user: req.user.nombre,
       barra: true,
       alerta: true,
+    });
+  }
+  let tickets;
+  if (req.user.rol === "Administrador") {
+    tickets = await Tickets.findAll();
+  } else {
+    tickets = await Tickets.findAll({
+      where: { id_user_asignado: req.user.nombre },
     });
   }
   res.render("catalogo/worktickets", {
@@ -94,9 +115,7 @@ const buscarTicketID = async (req, res) => {
   });
 };
 
-const detalleTicket = (req, res) => {
-
-};
+const detalleTicket = (req, res) => {};
 
 export {
   ticketsList,

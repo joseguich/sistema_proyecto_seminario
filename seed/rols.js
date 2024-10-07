@@ -11,6 +11,9 @@ const rols = [
   {
     nombre: "Estándar",
   },
+  {
+    nombre: "Soporte General",
+  },
 ];
 
 export default rols;

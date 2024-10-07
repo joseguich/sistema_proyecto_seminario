@@ -40,6 +40,10 @@ const Tickets = db.define("tickets", {
     defaultValue: "pendiente",
     allowNull: false,
   },
+  id_user_asignado: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 
   imagen: DataTypes.STRING,
 });

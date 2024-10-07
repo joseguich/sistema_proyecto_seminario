@@ -99,6 +99,7 @@ const registrarTicket = async (req, res) => {
     });
   }
 
+  //Solo los correcto estandar pra crear crear los tickets de reporte
   if (usuario.rol !== "Estándar") {
     return res.render("catalogo/crear-ticket", {
       pagina: "Crear Nuevo Ticket",
@@ -121,6 +122,7 @@ const registrarTicket = async (req, res) => {
     });
   }
 
+  //Solo los Administrador pueden crear tickets 
   if (req.user.rol === "Administrador") {
     if (req.user.email !== usuario.email) {
       res.render("template/mensaje", {
@@ -131,7 +133,9 @@ const registrarTicket = async (req, res) => {
         user: req.user.nombre,
       });
     }
-  } else if (req.user.email !== usuario.email) {
+  }
+  // Solo los usuarios que sean estándar pueden crear tickets
+  else if (req.user.email !== usuario.email) {
     return res.render("catalogo/crear-ticket", {
       pagina: "Crear Nuevo Ticket",
       csrfToken: req.csrfToken(),
@@ -153,6 +157,7 @@ const registrarTicket = async (req, res) => {
     });
   }
 
+  //Crear los tickets
   const ticket = await Tickets.create({
     email,
     asunto,
@@ -166,6 +171,7 @@ const registrarTicket = async (req, res) => {
   // Selecionamos la columna especifica con attributes
   const rolUsuario = await Rols.findAll({ attributes: ["nombre"] });
 
+  //Obtenr los datos de lo rol excepto el estándar y el administrador creando un nuevo array.
   const rolesDisponibles = rolUsuario
     .map((rol) => rol.nombre)
     .filter((nombre) => nombre !== "Estándar")
@@ -182,9 +188,10 @@ const registrarTicket = async (req, res) => {
     Impresoras: rolesDisponibles[1],
   };
 
+  // Asignar rol por default
   let rolAsignado = rolesDisponibles[2];
 
-  // Obtener los datos de las categorias
+  // Obtener los datos de las categorias y convertirlo en un array
   for (const [claveCategoria, rol] of Object.entries(catgoriasSeleccionada)) {
     //startsWith: compara si la cadena comienza con el texto especificado
     if (seleccionarCategorias.nombre.startsWith(claveCategoria)) {
@@ -193,10 +200,12 @@ const registrarTicket = async (req, res) => {
     }
   }
 
+  //Asignando el rol
   ticket.rol = rolAsignado;
 
+  // Filtrar usuarios por el rol asignado
   const usuarios = await Usuario.findAll({
-    where: { rol: rolAsignado }, // Filtrar usuarios por el rol asignado
+    where: { rol: rolAsignado },
   });
 
   // Verificar que haya usuarios con ese rol
@@ -211,9 +220,10 @@ const registrarTicket = async (req, res) => {
   // Seleccionar un usuario aleatorio
   const usuarioAsignado = usuarios[Math.floor(Math.random() * usuarios.length)];
 
+  // Guardar el historial del ticket con el usuario asignado aleatoriamente
   ticket.id_user_asignado = usuarioAsignado.nombre;
   await ticket.save();
-  // Guardar el historial del ticket con el usuario asignado aleatoriamente
+
   await TicketHistory.create({
     id_ticket: ticket.id,
     id_user_creador: req.user.nombre_usuario,

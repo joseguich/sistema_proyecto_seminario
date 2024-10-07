@@ -218,6 +218,7 @@ const registrarCuenta = async (req, res) => {
     mensaje: "Cuenta fue creada correctamente, solo seria confirmarla",
     exit: true,
     barra: true,
+    user: req.user.nombre,
   });
 };
 

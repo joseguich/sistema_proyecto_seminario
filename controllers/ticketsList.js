@@ -1,5 +1,6 @@
 // import { Usuario, Tickets, TicketHistory } from "../model/index.js";
 import Tickets from "../model/Tickets.js";
+import TicketHistory from "../model/TicketHistory.js";
 import { check, validationResult } from "express-validator";
 
 const ticketsList = async (req, res) => {
@@ -115,12 +116,25 @@ const buscarTicketID = async (req, res) => {
   });
 };
 
-const detalleTicket = (req, res) => {};
+const ticketHistories = async (req, res) => {
+  console.log(req.user.nombre);
+  const ticket = await TicketHistory.findAll({
+    where: { id_user_asignado: req.user.nombre },
+  });
+  console.log(ticket.id);
+
+  res.render("catalogo/ticket-histories", {
+    pagina: "Historial Ticket",
+    csrfToken: req.csrfToken(),
+    user: req.user.nombre,
+    barra: true,
+  });
+};
 
 export {
   ticketsList,
   workTickets,
   buscarTicketID,
   buscarTicket,
-  detalleTicket,
+  ticketHistories,
 };
